@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  email String @unique
+  hash String
+  firstName String?
+  lastName String?
+  phone String?
+  admin Boolean @default(true)
+  refreshtoken String?
+  setting Setting[]
+  messages Messages[]
+  schedule Schedule[]
+  @@map("users")
+
+}
+
+// 2-Settings
+model Setting{
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  businesName String
+  address String
+  contact Contact[]
+  cv Cv[]
+  hours Hours[]
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  @@map("settings")
+   
+}
+
+model Contact{
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name String
+  value String
+  settingid Int
+  setting Setting @relation(fields: [settingid], references: [id])
+ 
+   @@map("contact")
+   
+}
+
+model Hours{
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name String
+  value String
+  settingid Int
+  setting Setting @relation(fields: [settingid], references: [id])
+ 
+   @@map("hours")
+   
+}
+
+model Cv{
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name String
+  value String
+  settingid Int
+  setting Setting @relation(fields: [settingid], references: [id])
+ 
+   @@map("cv")
+   
+}
+
+model Messages{
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  client String
+  deparmetName String
+  messege String?
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  @@map("messages")
+   
+}
+
+model Schedule {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  client String
+  deparmetName String
+  date String
+  hours String
+  approved Boolean?
+  messege String
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  @@map("schedule")
+   
+}
